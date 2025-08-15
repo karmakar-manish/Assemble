@@ -9,7 +9,7 @@ export default function SidebarComponent({onSelectedUser}: {
 
     // console.log("Sidebar : ", sidebarUsers)
 
-    const onlineUsers = []
+    // const onlineUsers = []
 
     if (isSidebarLoading || !sidebarUsers)
         return <SidebarSkeleton />

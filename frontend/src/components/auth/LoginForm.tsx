@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import Input from "../Input";
-import { Eye, EyeClosed, Loader, Lock, Mail, User } from "lucide-react"
+import { Eye, EyeClosed, Loader, Lock, Mail } from "lucide-react"
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";

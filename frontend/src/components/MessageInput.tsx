@@ -3,14 +3,15 @@ import { axiosInstance } from "../lib/axios"
 import { toast } from "react-toastify"
 import { useRef, useState } from "react"
 import { Image, Send, X } from "lucide-react"
-import { setStyle } from "framer-motion"
-import { setPersistence } from "firebase/auth"
+
 
 export default function MessageInput({ id }: { id: number }) {
     const [messageData, setMessageData] = useState<string[]>([])
     const [newMessage, setNewMessage] = useState("")
     const [imagePreview, setImagePreview] = useState<string | null>(null)
 
+    console.log(messageData)
+    
     // React will store a reference to this DOM element in fileInputRef.current.
     const fileInputRef = useRef<HTMLInputElement | null>(null)
 
