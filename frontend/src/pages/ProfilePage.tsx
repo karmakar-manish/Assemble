@@ -14,7 +14,7 @@ export default function ProfilePage() {
 
     const { mutate: updateProfileMutation, isPending } = useMutation({
         mutationFn: async ({ profilePicture }: { profilePicture: string }) => {
-            console.log(profilePicture)
+            // console.log(profilePicture)
             const res = await axiosInstance.put("/user/update-profile", { profilePic: profilePicture })
             return res.data
         },
