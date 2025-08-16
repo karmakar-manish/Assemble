@@ -16,7 +16,7 @@ app.use(express.json({limit: "10mb"})) //for reading the body
 app.use(cookieParser()) //for cookies
 
 app.use(cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
+    origin: process.env.CLIENT_URL ,
     credentials: true   //for cookies
 }))
 
