@@ -1,7 +1,4 @@
 import bcrypt from "bcryptjs"
-import jwt from "jsonwebtoken"
-
-
 import { PrismaClient } from "@prisma/client"
 import generateToken_Cookie from "../lib/utils"
 const client = new PrismaClient()
@@ -10,8 +7,8 @@ const client = new PrismaClient()
 export async function signup(req:any, res:any)
 {
 
-    const {fullname, email, password} = req.body
-    if(!fullname || !email || !password)
+    const {fullname, email, password, uid} = req.body
+    if(!fullname || !email || !password || !uid)
         return res.status(400).json({message: "All fields are required!"})
 
     try{
@@ -40,6 +37,7 @@ export async function signup(req:any, res:any)
             data: {
                 fullname: fullname, 
                 email: email,
+                uid: uid,
                 password: hashedPassword
             }
         })
@@ -94,6 +92,35 @@ export async function login(req:any, res:any)
         console.log("Error from login route: ", err);
         return res.status(500).json({message: "Internal server error"})
     }
+}
+
+//login with google provider
+export async function providerLogin(req:any, res:any)
+{
+    //get the uid from the body
+    const uid = req.body.uid 
+
+    if(!uid)
+        return res.status(400).json({message:"Invalid email"})
+
+    //find the user with the given uid in database
+    const user = await client.userSchema.findFirst({
+        where: {
+            uid: uid
+        }
+    })
+
+    //incase no user is found
+    if(!user)
+        return res.status(400).json({message:"No account found. Signup instead!"})
+
+    //create jwt token and store in cookie
+    const token = generateToken_Cookie({userId: user.id, res})
+
+    //return
+    return res.json({
+        message: "Logged in successfully!"
+    })
 }
 
 //logout function 

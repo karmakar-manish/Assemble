@@ -19,8 +19,7 @@ export default function LoginPage() {
             try {
                 const res = await signInWithPopup(auth, provider)
                 const uid = res.user.uid 
-                
-                const response = await axiosInstance.post("/auth/providerLogin", { uid })
+                const response = await axiosInstance.post("/auth/providerlogin", { uid })
                 return response.data
             }
             catch (err) {

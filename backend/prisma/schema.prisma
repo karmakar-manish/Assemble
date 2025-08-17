@@ -23,6 +23,8 @@ model UserSchema {
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
+  uid String? @unique
+
   sentMessages     MessageSchema[] @relation("SentMessages")
   receivedMessages MessageSchema[] @relation("ReceivedMessages")
 }

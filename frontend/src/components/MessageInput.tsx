@@ -6,16 +6,16 @@ import { Image, Send, X } from "lucide-react"
 
 
 export default function MessageInput({ id }: { id: number }) {
-    const [messageData, setMessageData] = useState<string[]>([])
+    // const [messageData, setMessageData] = useState<string[]>([])
     const [newMessage, setNewMessage] = useState("")
     const [imagePreview, setImagePreview] = useState<string | null>(null)
 
-    console.log(messageData)
+    // console.log(messageData)
     
     // React will store a reference to this DOM element in fileInputRef.current.
     const fileInputRef = useRef<HTMLInputElement | null>(null)
 
-    const { mutate: sendMessage, isPending } = useMutation({
+    const { mutate: sendMessage } = useMutation({
         mutationFn: async ({
             text,
             image
@@ -27,7 +27,7 @@ export default function MessageInput({ id }: { id: number }) {
                 text,
                 image
             })
-            setMessageData(prev => [...prev, text])
+            // setMessageData(prev => [...prev, text])
             return res.data
         },
         onSuccess: () => {
@@ -38,7 +38,7 @@ export default function MessageInput({ id }: { id: number }) {
         }
     })
 
-    console.log(isPending)
+    // console.log(isPending)
 
 
     async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {

@@ -37,7 +37,7 @@ export function useGetMessagesHook(selectedUserId: number) {
             try {
                 const res = await axiosInstance.get(`/message/${selectedUserId}`)
 
-                console.log("Messages: ", res.data)
+                // console.log("Messages: ", res.data)
                 return res.data
 
             } catch (err: any) {
