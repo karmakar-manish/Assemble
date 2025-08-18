@@ -21,6 +21,7 @@ function App() {
   {
     return <div className='h-screen flex flex-col justify-center items-center'>
       <Loader className="animate-spin size-10"/>
+      <p className='pt-2'>Waking up server...</p>
     </div>
   }
 

@@ -22,8 +22,8 @@ export default function ChatContainer({
 
     // fetch the selected user's messages 
     useEffect(() => {
-        queryClient.invalidateQueries({ queryKey: userMessages })
-    }, [user])
+        queryClient.invalidateQueries({ queryKey: ["userMessages", user.id] })
+    }, [user, queryClient])
 
     if (isLoading) {
         return (
@@ -42,17 +42,17 @@ export default function ChatContainer({
     }
 
     return (
-        <div className="oveflow-auto flex-1 flex flex-col">
+        <div className="overflow-auto flex-1 flex flex-col">
 
             <ChatHeader user={user} setUser={setUser} />
 
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                {userMessages.map((message: any) => (
+                {userMessages?.map((message: any) => (
                     <div key={message.id} className={`chat ${message.senderId === authUser.id ? "chat-end" : "chat-start"}`}>
                         <div className="chat-image avatar">
                             <div className="size-10 rounded-full border">
                                 {/* displaying the profile pic of the user who sent the message  */}
-                                <img src={message.senderId === authUser.id ? authUser.profilePicture || "/avatar.png" : user.profilePicture || "/avatar.png"} alt="profile pic" />
+                                <img src={message.senderId === authUser?.id ? authUser.profilePicture || "/avatar.png" : user.profilePicture || "/avatar.png"} alt="profile pic" />
                             </div>
                         </div>
                         {/* Time  */}
