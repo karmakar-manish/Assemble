@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { toast } from "react-toastify";
+import { socket } from "../../lib/socket";
 
 export default function LoginForm() {
     const [email, setEmail] = useState("")
@@ -14,24 +15,28 @@ export default function LoginForm() {
     const queryClient = useQueryClient()
 
     //mutation to call the login api
-    const {mutate: loginMutation, isPending} = useMutation({
-        mutationFn: async(userData: {email: string, password: string})=>{
+    const { mutate: loginMutation, isPending } = useMutation({
+        mutationFn: async (userData: { email: string, password: string }) => {
             const res = await axiosInstance.post("/auth/login", userData)
-            return res.data 
+            return res.data
         },
-        onSuccess: ()=>{
+        onSuccess: (data) => {
             //re-fetch the authenticated user's data
-            queryClient.invalidateQueries({queryKey: ["authUser"]})
+            queryClient.invalidateQueries({ queryKey: ["authUser"] })
+            console.log("data: ", data)
+            //connect socket with logged in user
+            socket.connect()
+            socket.emit("join", data.id)    //tell the server this user has joined
         },
-        onError: (err:any)=>{
+        onError: (err: any) => {
             toast.error(err.response.data.message || "Error while login!")
         }
     })
-    
+
     function handleLogin(e: any) {
         e.preventDefault()
         //call the login mutation
-        loginMutation({email, password})
+        loginMutation({ email, password })
     }
 
     return <form onSubmit={handleLogin}>

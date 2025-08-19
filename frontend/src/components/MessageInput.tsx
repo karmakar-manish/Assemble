@@ -3,6 +3,7 @@ import { axiosInstance } from "../lib/axios"
 import { toast } from "react-toastify"
 import { useRef, useState } from "react"
 import { Image, Send, X } from "lucide-react"
+import { socket } from "../lib/socket"
 
 
 export default function MessageInput({ id }: { id: number }) {
@@ -28,17 +29,13 @@ export default function MessageInput({ id }: { id: number }) {
                 image
             })
             // setMessageData(prev => [...prev, text])
-            return res.data
-        },
-        onSuccess: () => {
-            toast.success("Message Sent")
+            socket.emit("sendMessage", res.data)
+            // return res.data
         },
         onError: (err: any) => {
             toast.error(err.response.data.message || "Error sending message!")
         }
     })
-
-    // console.log(isPending)
 
 
     async function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {

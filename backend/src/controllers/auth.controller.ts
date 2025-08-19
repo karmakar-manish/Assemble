@@ -47,7 +47,8 @@ export async function signup(req:any, res:any)
 
         return res.status(200).json({
             message: "User registered successfully!",
-            token: token
+            token: token,
+            id: newUser.id
         })
 
     }catch(err)
@@ -84,7 +85,8 @@ export async function login(req:any, res:any)
 
         //return the token
         return res.json({
-            message: "Logged in successfully!"
+            message: "Logged in successfully!",
+            id: user.id
         })
 
     }catch(err)
@@ -119,7 +121,8 @@ export async function providerLogin(req:any, res:any)
 
     //return
     return res.json({
-        message: "Logged in successfully!"
+        message: "Logged in successfully!",
+        id: user.id
     })
 }
 

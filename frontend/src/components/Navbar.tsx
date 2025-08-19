@@ -4,6 +4,7 @@ import { LogOut, MessageSquare, Settings, User } from "lucide-react"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { axiosInstance } from "../lib/axios"
 import { toast } from "react-toastify"
+import { socket } from "../lib/socket"
 
 export default function Navbar() {
     const { data: authUser } = useAuthUserHook()
@@ -18,6 +19,8 @@ export default function Navbar() {
         onSuccess: ()=>{
             queryClient.invalidateQueries({queryKey: ["authUser"]})
             toast.success("Logged out successfully!")
+            //disconnect the socket
+            socket.disconnect();
         }
     })
 
@@ -49,9 +52,9 @@ export default function Navbar() {
                                     <span className="hidden sm:inline">Profile</span>
                                 </Link>
 
-                                <button className="flex gap-2 items-center text-sm cursor-pointer bg-red-400 px-2 rounded-md hover:bg-red-300">
+                                <button className="flex gap-2 items-center text-sm cursor-pointer bg-red-400 px-2 rounded-md hover:bg-red-300" onClick={()=>{logout()}}>
                                     <LogOut className="size-5"/>
-                                    <span className="hidden sm:inline" onClick={()=>{logout()}}>Logout</span>
+                                    <span className="hidden sm:inline">Logout</span>
                                 </button>
                             </div>
                         )}

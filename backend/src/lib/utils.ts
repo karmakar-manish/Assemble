@@ -13,7 +13,7 @@ export default function generateToken_Cookie({userId, res}: {
     res.cookie("token", token,{
         httpOnly: true, //cannot access with javascript (prevent XSS attack)
         path:"/",
-        maxAge: 86400,
+        maxAge: 86400000,
         sameSite: "none",   //allows cross-site
         secure: true 
     })

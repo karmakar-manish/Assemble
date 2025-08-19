@@ -8,6 +8,7 @@ import { axiosInstance } from "../lib/axios"
 import { signInWithPopup } from "firebase/auth"
 import { auth, provider } from "../firebase"
 import { toast } from "react-toastify"
+import { socket } from "../lib/socket"
 
 
 export default function LoginPage() {
@@ -26,9 +27,15 @@ export default function LoginPage() {
                 throw err   //the OnError will catch this
             }
         },
-        onSuccess: () => {
+        onSuccess: (data) => {
             //re-fetch authenticated user's data
             queryClient.invalidateQueries({ queryKey: ["authUser"] })
+            
+            console.log("data: ", data)
+            
+            //connect socket with logged in user
+            socket.connect()
+            socket.emit("join", data.id)    //tell the server this user has joined
         },
         onError: (err: any) => {
             toast.error(err.response.data.message || "Something went wrong")
