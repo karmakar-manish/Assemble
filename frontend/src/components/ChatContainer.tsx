@@ -54,7 +54,7 @@ export default function ChatContainer({
         };
         
         //auto scroll on new message
-        scrollToBottom()    
+        // scrollToBottom()    
         
         //listen for new messages
         socket.on("receiveMessage", handleReceive)
@@ -84,7 +84,7 @@ export default function ChatContainer({
     }
 
     return (
-        <div className="overflow-auto flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col">
 
             <ChatHeader user={user} setUser={setUser} />
 
