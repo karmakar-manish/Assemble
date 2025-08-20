@@ -20,19 +20,18 @@ export default function ChatContainer({
     //fetch the messages of the selected user
     const { data: userMessages, isLoading } = useGetMessagesHook(user.id)
     const { data: authUser } = useAuthUserHook()
-    
+
     //for vertically sliding incase of new message
     const messageEndRef = useRef(null)
 
     //function to scroll to the bottom of the message
-    function scrollToBottom(){
-        if(messageEndRef.current)
-        {
-            (messageEndRef.current as HTMLElement).scrollIntoView({behavior: "smooth"})
+    function scrollToBottom() {
+        if (messageEndRef.current) {
+            (messageEndRef.current as HTMLElement).scrollIntoView({ behavior: "smooth" })
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         scrollToBottom()
     }, [userMessages])
 
@@ -44,18 +43,33 @@ export default function ChatContainer({
         socket.emit("join", authUser.id)
 
         const handleReceive = (newMessage: any) => {
-            queryClient.setQueryData(
-                ["userMessages", newMessage.senderId === authUser.id ? newMessage.receiverId : newMessage.senderId],
-                (old: any) => {
-                    if (!old) return [newMessage];
-                    return [...old, newMessage];
-                }
-            );
+            if (
+                (newMessage.senderId === user.id && newMessage.receiverId === authUser.id) ||
+                (newMessage.receiverId === user.id && newMessage.senderId === authUser.id)
+            ) {
+                queryClient.setQueryData(
+                    ["userMessages", user.id],
+                    (old: any) => {
+                        if (!old) return [newMessage];
+                        // dedupe: check if this message already exists
+                        const exists = old.some(
+                            (msg: any) =>
+                                msg.id === newMessage.id || // if backend gives unique id
+                                (msg.text === newMessage.text &&
+                                    msg.senderId === newMessage.senderId &&
+                                    msg.createdAt === newMessage.createdAt) // fallback dedupe
+                        )
+                        if (exists) return old
+                        return [...old, newMessage];
+                    }
+                );
+                // scrollToBottom()
+            }
         };
-        
+
         //auto scroll on new message
         // scrollToBottom()    
-        
+
         //listen for new messages
         socket.on("receiveMessage", handleReceive)
 
@@ -119,7 +133,7 @@ export default function ChatContainer({
                 ))}
 
                 {/* Invisible div for auto scroll  */}
-                <div ref={messageEndRef}/>
+                <div ref={messageEndRef} />
 
             </div>
 

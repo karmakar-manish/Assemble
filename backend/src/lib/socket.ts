@@ -14,27 +14,30 @@ const io = new Server(server, {
 })
 
 //listen to any incoming connections
-io.on("connection", (socket)=>{
+io.on("connection", (socket) => {
     // console.log("A user connected: ", socket.id);
 
     //when someone joins
-    socket.on("join", (userId)=>{
+    socket.on("join", (userId) => {
         socket.join(userId)
         // console.log(`User ${userId} joined their room`);
     })
 
     //when someone sends message
-    socket.on("sendMessage", (message)=>{
+    socket.on("sendMessage", (message) => {
+        // console.log("Receiver id: ", message.receiverId);
+        // console.log("Sender id: ", message.senderId);
+
         io.to(message.receiverId).emit("receiveMessage", message)
         io.to(message.senderId).emit("receiveMessage", message)
     })
 
     //when someone disconnects
-    socket.on("disconnect", ()=>{
+    socket.on("disconnect", () => {
         // console.log("A user disconnected: ", socket.id);
     })
 })
 
 
-export {io, app, server}
+export { io, app, server }
 

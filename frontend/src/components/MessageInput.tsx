@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { axiosInstance } from "../lib/axios"
 import { toast } from "react-toastify"
 import { useRef, useState } from "react"
@@ -11,8 +11,10 @@ export default function MessageInput({ id }: { id: number }) {
     const [newMessage, setNewMessage] = useState("")
     const [imagePreview, setImagePreview] = useState<string | null>(null)
 
+    const queryClient = useQueryClient()
+
     // console.log(messageData)
-    
+
     // React will store a reference to this DOM element in fileInputRef.current.
     const fileInputRef = useRef<HTMLInputElement | null>(null)
 
@@ -28,9 +30,17 @@ export default function MessageInput({ id }: { id: number }) {
                 text,
                 image
             })
-            // setMessageData(prev => [...prev, text])
-            socket.emit("sendMessage", res.data)
-            // return res.data
+            return res.data
+        },
+        onSuccess: (newMsg) => {
+            // Optimistically update cache
+            queryClient.setQueryData(["userMessages", id], (old: any) => {
+                if (!old) return [newMsg];
+                return [...old, newMsg];
+            });
+
+            // Emit to socket
+            socket.emit("sendMessage", newMsg);
         },
         onError: (err: any) => {
             toast.error(err.response.data.message || "Error sending message!")
